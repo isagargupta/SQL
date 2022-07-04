@@ -1,0 +1,70 @@
+CREATE DATABASE [06-05-2022]
+GO
+USE[06-05-2022]
+GO
+
+/****** Object:  StoredProcedure [dbo].[ADD_DATA]    Script Date: 04.05.2022 16:34:23 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE PROCEDURE [dbo].[ADD_DATA] --name of the procedure
+@ID_PERSON INT,
+@NAME VARCHAR(40),
+@id_Name_of_name INT-- the assigned parameters are our input values when we will execute our procedure. 
+AS
+BEGIN
+DECLARE @id_name INT --we have declared our variable as an integer,meaning it will be stored as integer data type.
+exec is_name @NAME, @id_name output--this is done to execute our stored procedure 'is_name' and our input will be @NAME and we expect an output of @id_name
+INSERT INTO DATA_PERSON VALUES(@ID_PERSON,@id_name,@id_Name_of_name)--we want to insert the new records into the data_person table
+end--the end of the procedure
+GO--used to separate commands
+/****** Object:  StoredProcedure [dbo].[ADD_PERSON]    Script Date: 04.05.2022 16:34:23 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE PROCEDURE [dbo].[ADD_PERSON]
+@DATE_OF_BIRTH DATE,
+@NAME_1 VARCHAR(40),
+@SURNAME VARCHAR(40)--now we are setting our new input parameters
+AS
+BEGIN
+DECLARE @ID_PERSON INT
+DECLARE @id_name INT--we are declaring that the data type of @id_name and @id_person is integer
+if @id_person=0 or @id_person is null--we want to check if the id_person that has been given as input exists in the table already.And if it does not then the new birthday will be added to the table person and a new id_person will be generated and assigned to it.
+begin
+INSERT INTO PERSON VALUES (@DATE_OF_BIRTH)
+SET @ID_PERSON=@@IDENTITY--this statement ensures that the new id_person will be added as the last one existing in the table.
+end
+else --if the id_person exists then 
+begin --we shall show the birthdate which already exists in the person table.id_person entered should be the same as the one in the table.
+SELECT @DATE_OF_BIRTH=BirthDate from person where id_person=@id_person
+			IF @DATE_OF_BIRTH<>@DATE_OF_BIRTH--and if the birhtdate entered is different from the one in the table,
+			BEGIN--then we should update and put the new birthdate and replace old one in the record when the id_person entered is equal to the id_person in the table.
+				UPDATE PERSON set BirthDate=@DATE_OF_BIRTH where id_person=@id_person
+			END
+EXEC ADD_DATA @ID_PERSON,@NAME_1,1
+EXEC ADD_DATA @ID_PERSON,@SURNAME,3
+
+END
+
+GO
+/****** Object:  StoredProcedure [dbo].[is_name]    Script Date: 04.05.2022 16:34:23 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE PROCEDURE [dbo].[is_name]
+@name varchar(40),--input is name and the procedure returns the id_name in the form of an integer value
+@id_name int output--we expect an output of the id_Name
+AS
+BEGIN
+select @id_name=id_name from [name] where [name]=@name--after entering name an id_name that corresponds to that name in the name table will be returned
+if @id_name is null--and if there is no such name 
+begin
+insert into [name] values (@name)--the new name will be entered as a new record in the name table
+set @id_name=@@identity--it will be added as the last name in the table
+end
+END--end of procedure
+

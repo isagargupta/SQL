@@ -1,0 +1,45 @@
+use [61511_6-4-2022]
+go
+select * from menu_test
+
+select id_department from persons where surname='belt'
+
+select * from persons where ID_DEPARTMENT=1
+
+select e2.surname from persons e1, persons e2
+where e1.id_department= e2.id_department and e1.surname='belt'
+
+select * from persons where ID_DEPARTMENT=(
+select id_department from persons where surname='belt')
+
+select surname,[name] from persons where ID_DEPARTMENT=(
+select id_department from persons where surname='belt')
+
+select surname as s from persons as p
+
+select person.surname as last_name,[address].addressline as [address]
+from person, [address]
+
+select p.surname as l,aa.addressline as a
+from person as p, [address] as aa
+
+select p.surname as l,aa.addressline as a --I will use this allias
+from person p, [address] aa
+
+SELECT * into PERSONS_1 FROM PERSONS
+
+
+
+SELECT PERSONS.SURNAME
+FROM     PERSONS INNER JOIN
+                  PERSONS_1 ON PERSONS.id_department = PERSONS_1.id_department
+WHERE  (PERSONS_1.SURNAME = 'belt')
+
+select * from persons where id_department in (35,12)
+
+select * from persons,department
+where persons.id_department=department.id_department
+
+select * from persons where id_department is null
+
+select * from persons where id_person in(12,35)
